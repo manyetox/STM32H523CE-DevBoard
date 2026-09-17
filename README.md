@@ -2,10 +2,16 @@
 
 A compact, breadboard-oriented development board built around the **STM32H523CE** (Arm Cortex-M33). The board was designed in **KiCad 10** to expose the MCU's useful I/O while keeping the essentials onboard: USB-C, SWD, 3.3 V regulation, BOOT/RESET control, status/user LEDs, a user button, and an alternate 5 V input.
 
+<p align="center">
+  <img src="Media/PCB-Image.jpeg" alt="Assembled STM32H523CE development board" width="500">
+</p>
+
+<p align="center"><em>Assembled V1 prototype.</em></p>
+
 > **Hardware revision:** V1.0  
 > **Board size:** 29.07 mm × 48.17 mm  
 > **PCB:** 2-layer, 1.6 mm  
-> **Design status:** Prototype hardware. Verify the current revision and BOM before production or reuse.
+> **Design status:** Assembled V1 prototype. Verify the current revision and component choices before production or reuse.
 
 ## Why this board exists
 
@@ -42,6 +48,28 @@ It is intended for:
 - Dual **2.54 mm GPIO headers**
 - VDDA filtering and dedicated VCAP capacitors
 - HSE/LSE oscillator pins remain available on the headers; no external crystals are fitted onboard
+
+## Hardware design
+
+### Schematic
+
+The full board schematic is shown below. It includes the STM32H523CE core, USB-C interface and ESD protection, 5 V input selection, 3.3 V regulator, SWD, BOOT0, reset, user button, LEDs, decoupling, and GPIO headers.
+
+[![STM32H523CE development board schematic](Media/Schematic.png)](Media/Schematic.png)
+
+_Click the schematic to open the full-resolution image._
+
+### PCB layout
+
+The V1 board is a compact two-layer layout with the MCU centered between the two GPIO header rows and the USB-C/power circuitry at the top of the board.
+
+<p align="center">
+  <a href="Media/Layout.png">
+    <img src="Media/Layout.png" alt="STM32H523CE V1 PCB layout" width="420">
+  </a>
+</p>
+
+_Click the PCB layout to open the full-resolution image._
 
 ## Board overview
 
@@ -260,32 +288,30 @@ BOOT0 includes:
 - 10 kΩ pull-down to GND
 - 2-pin header to allow BOOT0 to be pulled to +3.3 V
 
-## Bill of materials
+## Hardware files
 
-A generated component summary is included in:
+The complete hardware package currently published with this repository is:
 
-```text
-bom/BOM_V1.csv
-```
+- [`Hardware/stm32h23_dev.zip`](Hardware/stm32h23_dev.zip) — KiCad project files and V1 Gerber/drill files.
 
-For true reproduction, replace generic BOM entries with exact manufacturer part numbers before ordering. In the current KiCad source, the following are not fully specified by MPN:
+The archive contains the editable KiCad schematic and PCB source as well as the fabrication outputs used for V1. This makes it possible to inspect, modify, and regenerate the design rather than relying only on screenshots.
+
+### Component reproducibility
+
+Several parts in the current KiCad design are specified by electrical value/footprint rather than a frozen manufacturer part number. Before ordering a new batch, verify the exact component you intend to use for:
 
 - D1 / D2 Schottky diodes
 - F1 500 mA resettable fuse
-- Outer1 / Outer2 LEDs
-- SW10 / SW11 switch MPNs
-- J1 / J3 / J5 / J6 header/socket MPNs
-- Exact J2 USB-C ordering suffix
+- Indicator/user LEDs
+- Push buttons
+- Pin headers
+- Exact USB-C connector variant
 
-Do not treat footprint compatibility alone as proof that a substitute component is electrically or mechanically equivalent.
+Footprint compatibility alone does not guarantee that a substitute is electrically or mechanically equivalent.
 
 ## Manufacturing
 
-The V1 Gerber package is located in:
-
-```text
-gerbers/V1.zip
-```
+The V1 Gerber and drill files are included inside [`Hardware/stm32h23_dev.zip`](Hardware/stm32h23_dev.zip), under the `gerbers/V1/` directory.
 
 Current PCB parameters taken from the KiCad design:
 
@@ -302,33 +328,24 @@ Current PCB parameters taken from the KiCad design:
 
 Before ordering a new revision, regenerate fabrication files from the exact tagged KiCad source rather than assuming an old Gerber ZIP matches the latest PCB file.
 
-## Suggested repository structure
+## Repository structure
 
 ```text
-STM32H523CE-DevBoard/
+.
 ├── README.md
-├── LICENSE
-├── .gitignore
-├── hardware/
-│   ├── stm32h23_dev.kicad_pro
-│   ├── stm32h23_dev.kicad_sch
-│   └── stm32h23_dev.kicad_pcb
-├── bom/
-│   └── BOM_V1.csv
-├── gerbers/
-│   └── V1.zip
-├── docs/
-│   ├── PINOUT.md
-│   ├── ASSEMBLY_AND_BRINGUP.md
-│   └── images/
-│       ├── board-top.jpg
-│       ├── board-bottom.jpg
-│       └── board-assembled.jpg
-└── firmware/
-    └── examples/
+├── Hardware/
+│   └── stm32h23_dev.zip
+└── Media/
+    ├── PCB-Image.jpeg
+    ├── Layout.png
+    └── Schematic.png
 ```
 
-Do **not** commit KiCad lock files, autosave/history folders, or routine backup archives.
+The README intentionally references only the media currently present in the repository. There are no placeholder renders, extra board photos, or demo videos.
+
+### Recommended cleanup for the hardware archive
+
+For a cleaner public release, the next hardware ZIP should contain the final KiCad project and fabrication files but omit editor-generated data such as `.history/`, `*-backups/`, `*.lck`, and other temporary files. This keeps the downloadable hardware package smaller and avoids publishing internal revision clutter.
 
 ## Revisions
 
